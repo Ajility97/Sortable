@@ -1199,6 +1199,7 @@ function Sortable(el, options) {
     store: null,
     handle: null,
     allowDuplicates: false,
+    isDestructive: false,
     draggable: /^[uo]l$/i.test(el.nodeName) ? '>li' : '>*',
     swapThreshold: 1,
     // percentage; 0 <= x <= 1
@@ -1825,6 +1826,7 @@ Sortable.prototype =
         fromSortable = putSortable || activeSortable,
         vertical,
         _this = this,
+        destructive = options.isDestructive,
         completedFired = false;
 
     if (_silent) return;
@@ -2001,16 +2003,13 @@ Sortable.prototype =
         }
       } else if (target.parentNode === el) {
         if (!options.allowDuplicates && el !== rootEl) {
-          var duplicates = el.querySelectorAll("#" + dragEl.id);
+          var textArr = [];
+          var items = el.querySelectorAll('.list-group-item').forEach(function (item) {
+            return textArr.push(item.innerText);
+          });
 
-          if (duplicates.length > 1) {
+          if (textArr.includes(dragEl.innerText)) {
             return;
-          }
-
-          if (duplicates.length == 1) {
-            if (!duplicates[0].classList.contains(options.ghostClass)) {
-              return;
-            }
           }
         }
 
