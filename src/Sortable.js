@@ -1007,9 +1007,8 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 			fromSortable = (putSortable || activeSortable),
 			vertical,
 			_this = this,
+			destructive = options.isDestructive,
 			completedFired = false;
-
-		destructive = options.isDestructive;
 
 		if (_silent) return;
 
@@ -1201,14 +1200,11 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 			}
 			else if (target.parentNode === el) {
 				if (!options.allowDuplicates && el !== rootEl) {
-					var duplicates = el.querySelectorAll("#"+dragEl.id);
-					if (duplicates.length > 1) {
+					let textArr = [];
+					let items = el.querySelectorAll('.list-group-item').forEach(item => textArr.push(item.innerText));
+
+					if (textArr.includes(dragEl.innerText)) {
 						return;
-					}
-					if (duplicates.length == 1) {
-						if (!duplicates[0].classList.contains(options.ghostClass)) {
-							return;
-						}
 					}
 				}
 
