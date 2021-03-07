@@ -1198,6 +1198,7 @@ function Sortable(el, options) {
     disabled: false,
     store: null,
     handle: null,
+    allowDuplicates: false,
     draggable: /^[uo]l$/i.test(el.nodeName) ? '>li' : '>*',
     swapThreshold: 1,
     // percentage; 0 <= x <= 1
@@ -1999,6 +2000,20 @@ Sortable.prototype =
           return completed(true);
         }
       } else if (target.parentNode === el) {
+        if (!options.allowDuplicates && el !== rootEl) {
+          var duplicates = el.querySelectorAll("#" + dragEl.id);
+
+          if (duplicates.length > 1) {
+            return;
+          }
+
+          if (duplicates.length == 1) {
+            if (!duplicates[0].classList.contains(options.ghostClass)) {
+              return;
+            }
+          }
+        }
+
         targetRect = getRect(target);
         var direction = 0,
             targetBeforeFirstSwap,

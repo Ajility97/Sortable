@@ -110,6 +110,8 @@ let dragEl,
 	activeGroup,
 	putSortable,
 
+	destructive = false,
+
 	awaitingDragStarted = false,
 	ignoreNextClick = false,
 	sortables = [],
@@ -362,6 +364,8 @@ function Sortable(el, options) {
 		disabled: false,
 		store: null,
 		handle: null,
+		allowDuplicates: false,
+		isDestructive: false,
 		draggable: /^[uo]l$/i.test(el.nodeName) ? '>li' : '>*',
 		swapThreshold: 1, // percentage; 0 <= x <= 1
 		invertSwap: false, // invert always
@@ -1005,6 +1009,8 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 			_this = this,
 			completedFired = false;
 
+		destructive = options.isDestructive;
+
 		if (_silent) return;
 
 		function dragOverEvent(name, extra) {
@@ -1194,6 +1200,18 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 				}
 			}
 			else if (target.parentNode === el) {
+				if (!options.allowDuplicates && el !== rootEl) {
+					var duplicates = el.querySelectorAll("#"+dragEl.id);
+					if (duplicates.length > 1) {
+						return;
+					}
+					if (duplicates.length == 1) {
+						if (!duplicates[0].classList.contains(options.ghostClass)) {
+							return;
+						}
+					}
+				}
+
 				targetRect = getRect(target);
 				let direction = 0,
 					targetBeforeFirstSwap,
@@ -1426,6 +1444,10 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 							fromEl: rootEl,
 							originalEvent: evt
 						});
+
+						if (destructive) {
+							dragEl && dragEl.parentNode && dragEl.parentNode.removeChild(dragEl);
+						}
 
 						_dispatchEvent({
 							sortable: this,
