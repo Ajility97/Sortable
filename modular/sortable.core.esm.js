@@ -2005,10 +2005,10 @@ Sortable.prototype =
         if (!options.allowDuplicates && el !== rootEl) {
           var textArr = [];
           var items = el.querySelectorAll('.list-group-item').forEach(function (item) {
-            return textArr.push(item.innerText);
+            return textArr.push(item.id);
           });
 
-          if (textArr.includes(dragEl.innerText)) {
+          if (textArr.includes(dragEl.id)) {
             return;
           }
         }

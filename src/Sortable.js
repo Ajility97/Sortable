@@ -1201,9 +1201,9 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 			else if (target.parentNode === el) {
 				if (!options.allowDuplicates && el !== rootEl) {
 					let textArr = [];
-					let items = el.querySelectorAll('.list-group-item').forEach(item => textArr.push(item.innerText));
+					let items = el.querySelectorAll('.list-group-item').forEach(item => textArr.push(item.id));
 
-					if (textArr.includes(dragEl.innerText)) {
+					if (textArr.includes(dragEl.id)) {
 						return;
 					}
 				}
