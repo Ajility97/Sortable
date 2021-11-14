@@ -1994,21 +1994,31 @@ Sortable.prototype =
         }
 
         if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, !!target) !== false) {
-          capture();
-          el.appendChild(dragEl);
-          parentEl = el; // actualization
+          var textArr = [];
+          var items = el.querySelectorAll('div').forEach(function (item) {
+            textArr.push(item.id);
+          });
 
-          changed();
-          return completed(true);
+          if (textArr.includes(dragEl.id) && !options.allowDuplicates) {
+            return;
+          } else {
+            capture();
+            el.appendChild(dragEl);
+            parentEl = el; // actualization
+
+            changed();
+            return completed(true);
+          }
         }
       } else if (target.parentNode === el) {
         if (!options.allowDuplicates && el !== rootEl) {
-          var textArr = [];
-          var items = el.querySelectorAll('.list-group-item').forEach(function (item) {
-            return textArr.push(item.id);
+          var _textArr = [];
+
+          var _items = el.querySelectorAll('.list-group-item').forEach(function (item) {
+            _textArr.push(item.id);
           });
 
-          if (textArr.includes(dragEl.id)) {
+          if (_textArr.includes(dragEl.id)) {
             return;
           }
         }

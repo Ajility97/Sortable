@@ -1190,18 +1190,25 @@ Sortable.prototype = /** @lends Sortable.prototype */ {
 				}
 
 				if (onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, !!target) !== false) {
-					capture();
-					el.appendChild(dragEl);
-					parentEl = el; // actualization
+					let textArr = [];
+					let items = el.querySelectorAll('div').forEach(item => { textArr.push(item.id); } );
 
-					changed();
-					return completed(true);
+					if (textArr.includes(dragEl.id) && !options.allowDuplicates) {
+						return;
+					} else {
+						capture();
+						el.appendChild(dragEl);
+						parentEl = el; // actualization
+
+						changed();
+						return completed(true);
+					}
 				}
 			}
 			else if (target.parentNode === el) {
 				if (!options.allowDuplicates && el !== rootEl) {
 					let textArr = [];
-					let items = el.querySelectorAll('.list-group-item').forEach(item => textArr.push(item.id));
+					let items = el.querySelectorAll('.list-group-item').forEach(item => { textArr.push(item.id); } );
 
 					if (textArr.includes(dragEl.id)) {
 						return;
